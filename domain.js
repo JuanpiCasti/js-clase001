@@ -19,7 +19,7 @@ export class Producto {
         const precioBaseTotal = this.precioBase * this.cantidad
         const precioFinal = this.descuentos.reduce( // Ejemplo de reduce
             (precioAnterior, descuento) =>
-                precioAnterior - descuento.valorDescontado(this.precioBase, this.cantidad), // Polimorfismo
+                precioAnterior - descuento.valorDescontado(precioBaseTotal, this.cantidad), // Polimorfismo
             precioBaseTotal)
         return Math.max(0, precioFinal)
     }
@@ -43,8 +43,8 @@ export class DescuentoPorcentaje {
         this.porcentaje = porcentaje
     }
 
-    valorDescontado(precioBase, _) {
-        return precioBase * this.porcentaje / 100
+    valorDescontado(precioBaseTotal, _) {
+        return precioBaseTotal * this.porcentaje / 100
     }
 }
 
@@ -55,11 +55,11 @@ export class DescuentoPorCantidad {
         this.porcentaje = porcentaje
     }
 
-    valorDescontado(precioBase, cantidad) {
+    valorDescontado(precioBaseTotal, cantidad) {
         const vecesRepetido = Math.floor(cantidad / this.cantidadMinima)
         let valorDescontado = 0
         if (vecesRepetido >= 1) {
-            valorDescontado = precioBase * this.porcentaje / 100 * vecesRepetido
+            valorDescontado = precioBaseTotal * this.porcentaje / 100 * vecesRepetido
         }
         return valorDescontado
     }
